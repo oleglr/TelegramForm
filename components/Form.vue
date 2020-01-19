@@ -157,6 +157,7 @@ export default {
 		border: 1px solid #1890FF
 		border-radius: 4px
 		box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045)
+		font-family: 'Manrope VF', Manrope, sans-serif
 		color: #ffffff
 		text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12)
 		cursor: pointer
