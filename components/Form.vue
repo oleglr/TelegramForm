@@ -108,7 +108,6 @@ export default {
 		align-items: center
 		padding: 24px
 		background: #f5f5f5
-		border-bottom: 1px dashed #dddddd
 	&__logo
 		margin-right: 8px
 	&__body
@@ -175,5 +174,4 @@ export default {
 	&__link
 		border-bottom: 1px solid #dddddd
 		text-decoration: none	
-
 </style>

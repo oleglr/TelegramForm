@@ -1,12 +1,12 @@
 {
   "telegram": {
-    "token": "***",
-    "chat": "***"
+    "token": "958444551:AAEFQDXNEAZJQJwOT9japAK3s_5z9txnNfI",
+    "chat": "878225922"
 	},
 	"proxy": {
-		"host": "***",
-		"port": "***",
-		"login": "***",
-		"pass": "***"
+		"host": "45.147.181.204",
+		"port": "8000",
+		"login": "TVv6gC",
+		"pass": "VeyfFh"
 	}
 }
