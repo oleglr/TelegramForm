@@ -1,12 +1,12 @@
 {
   "telegram": {
-    "token": "***",
-    "chat": "***"
+    "token": "",
+    "chat": ""
 	},
 	"proxy": {
-		"host": "***",
-		"port": "***",
-		"login": "***",
-		"pass": "***"
+		"host": "",
+		"port": "",
+		"login": "",
+		"pass": ""
 	}
 }

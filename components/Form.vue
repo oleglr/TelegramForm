@@ -1,93 +1,131 @@
 <template>
-	<form id="Form" class="form" action="/formsend" method="post" enctype="application/x-www-form-urlencoded">
-			<header class="form__header">
-				<img src="logo.svg" alt="Логотип Telegram" class="form__logo">
-				<h1 class="form__title">Telegram Form</h1>
-				<div class="form__status" id="Status">{{ StatusText }}</div>
-			</header>
-			<fieldset class="form__body" form="Form">
-				<label for="name" class="form__label">Ваше имя</label>
-				<input type="text" id="name" name="Name" title="Пожалуйста, введите ваше имя" class="form__input" placeholder="Иван" required>
-				<label for="phone" class="form__label">Контактный телефон</label>
-				<input type="tel" id="phone" name="Phone" title="Пожалуйста, введите ваш контактный телефон" class="form__input" placeholder="+7 900 000 00 00" required>
-				<label for="email" class="form__label">Электронная почта</label>
-				<input type="email" id="email" name="Email" title="Пожалуйста, введите адрес вашей электронной почты" class="form__input" placeholder="example@example.ru" required>
-				<button class="form__button" id="Button" @click="SubmitForm">Отправить</button>
-			</fieldset>
-			<footer class="form__footer">
-				<a href="https://github.com/Selexio/TelegramForm" target="_blank" class="form__link">Исходник на GitHub</a>
-			</footer>
-		</form>
+  <form
+    id="Form"
+    class="form"
+    action="/formsend"
+    method="post"
+    enctype="application/x-www-form-urlencoded"
+  >
+    <header class="form__header">
+      <img src="logo.svg" alt="Логотип Telegram" class="form__logo" />
+      <h1 class="form__title">Telegram Form</h1>
+      <div class="form__status" id="Status">{{ StatusText }}</div>
+    </header>
+    <fieldset class="form__body" form="Form">
+      <label for="name" class="form__label">Ваше имя</label>
+      <input
+        type="text"
+        id="name"
+        name="Name"
+        title="Пожалуйста, введите ваше имя"
+        class="form__input"
+        placeholder="Иван"
+        required
+      />
+      <label for="phone" class="form__label">Контактный телефон</label>
+      <input
+        type="tel"
+        id="phone"
+        name="Phone"
+        title="Пожалуйста, введите ваш контактный телефон"
+        class="form__input"
+        placeholder="+7 900 000 00 00"
+        required
+      />
+      <label for="email" class="form__label">Электронная почта</label>
+      <input
+        type="email"
+        id="email"
+        name="Email"
+        title="Пожалуйста, введите адрес вашей электронной почты"
+        class="form__input"
+        placeholder="example@example.ru"
+        required
+      />
+      <button class="form__button" id="Button" @click="SubmitForm">Отправить</button>
+    </fieldset>
+    <footer class="form__footer">
+      <a
+        href="https://github.com/Selexio/TelegramForm"
+        target="_blank"
+        class="form__link"
+      >Исходник на GitHub</a>
+    </footer>
+  </form>
 </template>
 
 <script>
 export default {
-	data() {
-		return {
-			StatusText: ''
-		}
-	},
-	methods: {
-		
-		SubmitForm: function(e) { // Отправка Формы
+  data() {
+    return {
+      StatusText: ""
+    };
+  },
+  methods: {
+    SubmitForm: function(e) {
+      // Отправка Формы
 
-			const Form 	 = document.querySelector('#Form'); // Форма
-			const Status = document.querySelector('#Status'); // Статус отправки
-			const Button = document.querySelector('#Button'); // Кнопка «Отправить»
-			const Model = this; // Контекст
+      const Form = document.querySelector("#Form"); // Форма
+      const Status = document.querySelector("#Status"); // Статус отправки
+      const Button = document.querySelector("#Button"); // Кнопка «Отправить»
+      const Model = this; // Контекст
 
-			if (Form.checkValidity()){ // Проверяем заполнены ли все обязательные поля
-				e.preventDefault(); // Отменяем перезагрузку страницы для отправки по Ajax
-				function toJSONString(Form) {
-					var obj = {}
-					var elements = Form.querySelectorAll('input')
-					for (var i = 0; i < elements.length; ++i) {
-						var element = elements[i]
-						var name = element.name
-						var value = element.value
-						if (name) {
-							obj[ name ] = value
-						}
-					}
-					return JSON.stringify(obj)
-				}
+      if (Form.checkValidity()) {
+        // Проверяем заполнены ли все обязательные поля
+        e.preventDefault(); // Отменяем перезагрузку страницы для отправки по Ajax
+        function toJSONString(Form) {
+          let obj = {};
+          let elements = Form.querySelectorAll("input");
+          elements.forEach(function(input) {
+            let name = input.name;
+            let value = input.value;
+            if (name) {
+              obj[name] = value;
+            }
+          });
+          return JSON.stringify(obj);
+        }
 
-				if (Form) {
-					const json = toJSONString(Form)
-					const formReq = new XMLHttpRequest()
-					formReq.open('POST', '/formsend', true,)
-					formReq.onload = function() {
-						if (formReq.status === 200) {
-							Model.StatusText = 'Отправлено';
-							Model.ShowStatus();
-						}
-						if (formReq.status !== 200) {
-							Model.StatusText = 'Ошибка';
-							Status.style.background = '#FF6347'
-							Model.ShowStatus();
-						}
-					}
-					formReq.setRequestHeader('Content-Type', 'application/json')
-					formReq.send(json)
-				}
-				setTimeout(this.ClearForm, 3000); // Запускаем функцию Очистки формы после 2 секунд
-			}
+        if (Form) {
+          const json = toJSONString(Form);
+          const formReq = new XMLHttpRequest();
+          async function sendForm() {
+            try {
+              await formReq.open("POST", "/formsend", true);
+              Model.StatusText = "Отправлено";
+              Model.ShowStatus();
+            } catch (err) {
+              Model.StatusText = "Ошибка";
+              Status.style.background = "#FF6347";
+              Model.ShowStatus();
+              console.error(err);
+            } finally {
+              Model.ClearForm();
+            }
+          }
+          sendForm();
+          formReq.setRequestHeader("Content-Type", "application/json");
+          formReq.send(json);
+        }
+      }
+    },
 
-		},
+    ShowStatus: function() {
+      // Вывод Статуса
+      Status.style.right = 24 + "px"; // Сдвигаем Статус влево, показываем его
+      Status.style.opacity = 1; // Делаем Статус полностью непрозрачным
+    },
 
-		ShowStatus: function() { // Вывод Статуса
-			Status.style.right = 24 + 'px'; // Сдвигаем Статус влево, показываем его
-			Status.style.opacity = 1; // Делаем Статус полностью непрозрачным
-		},
-
-		ClearForm: function() { // Очистка Формы
-			Form.reset(); // Очищаем поля
-			Status.style.right = '-' + 87 + 'px'; // Сдвигаем Статус за пределы Формы
-			Status.style.opacity = 0; // Делаем Статус полностью прозрачным
-		}
-
-	}
-}
+    ClearForm: function() {
+      // Очистка Формы
+      setTimeout(() => {
+        Form.reset(); // Очищаем поля
+        Status.style.right = "-" + 87 + "px"; // Сдвигаем Статус за пределы Формы
+        Status.style.opacity = 0; // Делаем Статус полностью прозрачным
+      }, 2000);
+    }
+  }
+};
 </script>
 
 <style lang="sass">
@@ -95,7 +133,7 @@ export default {
 	position: relative
 	display: flex
 	flex-direction: column
-	max-width: 400px
+	max-width: 360px
 	width: 100%
 	overflow: hidden
 	background: #ffffff
@@ -136,7 +174,8 @@ export default {
 		border-radius: 4px
 		color: #ffffff
 	&__label
-		margin-bottom: 4px
+		margin-bottom: 8px
+		line-height: 1
 		font-variation-settings: 'wght' 700
 		&::after
 			content: ':'
@@ -173,5 +212,9 @@ export default {
 		text-align: center
 	&__link
 		border-bottom: 1px solid #dddddd
-		text-decoration: none	
+		text-decoration: none
+		color: #265a8a
+		&:active
+			color: #265a8a
+			border-bottom: 1px solid transparent
 </style>
